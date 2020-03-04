@@ -14,6 +14,7 @@ class App extends React.Component {
     city: undefined,
     country: undefined,
     feel: undefined,
+    pressure: undefined,
     sunset: undefined,
     error: undefined
   }
@@ -29,10 +30,11 @@ class App extends React.Component {
       console.log(data);
 
       this.setState({
-        tepm: data.main.temp,
+        temp: data.main.temp,
         city: data.name,
         country: data.sys.country,
-        feel: data.main.feel,
+        pressure: data.main.pressure,
+        feel: data.main.feels_like,
         sunset: data.sys.sunset,
         error: ""
       });
@@ -49,6 +51,7 @@ class App extends React.Component {
       city={this.state.city}
       country={this.state.country}
       feel={this.state.feel}
+      pressure={this.state.pressure}
       sunset={this.state.sunset}
       error={this.state.error}
       /> 
