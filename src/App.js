@@ -29,13 +29,20 @@ class App extends React.Component {
       const data = await api_url.json();
       console.log(data);
 
+      var sunset = data.sys.sunset;
+      var date = new Date();
+      console.log(date)
+      date.setTime(sunset*1000);
+      var sunset_date = date.getHours() + ":" + date.getMinutes();
+      console.log(sunset_date)
+
       this.setState({
         temp: data.main.temp,
         city: data.name,
         country: data.sys.country,
         pressure: data.main.pressure,
         feel: data.main.feels_like,
-        sunset: data.sys.sunset,
+        sunset: sunset_date,
         error: ""
       });
     }
@@ -47,13 +54,13 @@ class App extends React.Component {
       <Info />
       <Form weatherMethod = {this.gettingWeather}/>
       <Weather 
-      temp={this.state.temp}
-      city={this.state.city}
-      country={this.state.country}
-      feel={this.state.feel}
-      pressure={this.state.pressure}
-      sunset={this.state.sunset}
-      error={this.state.error}
+        temp={this.state.temp}
+        city={this.state.city}
+        country={this.state.country}
+        feel={this.state.feel}
+        pressure={this.state.pressure}
+        sunset={this.state.sunset}
+        error={this.state.error}
       /> 
     </div>
   );
