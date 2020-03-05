@@ -1,6 +1,7 @@
 import React from "react";  
 import Info from "./components/info"
 import Form from "./components/form"
+import "bootstrap/"
 import Weather from "./components/weather"
 
 const API_KEY = "4c61b270f69a9186e3fb5ed85b49925b";
@@ -33,7 +34,7 @@ class App extends React.Component {
       var date = new Date();
       console.log(date)
       date.setTime(sunset*1000);
-      var sunset_date = date.getHours() + ":" + date.getMinutes();
+      var sunset_date = date.toTimeString(); //date.getHours() + ":" + date.getMinutes();
       console.log(sunset_date)
 
       this.setState({
