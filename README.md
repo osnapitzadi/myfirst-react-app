@@ -1,68 +1,157 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# A.L.A.R.A Safety Board
 
-## Available Scripts
+An industrial **safety-awareness dashboard** for a warehouse that handles
+radioactive materials. It runs fullscreen on a wall monitor (kiosk-style) and
+makes the "Days Since Last Recordable Incident" streak impossible to ignore —
+with enough humor that the crew actually looks up.
 
-In the project directory, you can run:
+Named after **ALARA** — *As Low As Reasonably Achievable* — who is also the
+board's hard-hat mascot and site safety officer.
 
-### `npm start`
+![Board](docs/preview.png)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Features
 
-### `npm test`
+- **Hero counter** — "Days Since Last Recordable Incident" as big industrial
+  digit tiles. The number is **derived from a stored last-incident date**, so it
+  self-corrects across reboots and ticks over at midnight on its own.
+- **A.L.A.R.A mascot** — a hard-hat safety officer whose mood tracks the streak:
+  cool with shades at 30+ days, steady at 10–29, sweating in single digits, and
+  a dramatic face-plant the moment you reset. She delivers the **Safety Message
+  of the Day**.
+- **Report Incident · Reset** — the intentional gag. Confirms, then fires an
+  amber-beacon alarm + screen shake + mascot faceplant before resetting the
+  streak to 0. Resetting is *memorable*.
+- **Log a Near-Miss** — celebrated, not punished. A monthly counter that
+  auto-rolls to 0 each new month. Reporting a near-miss is a **catch**.
+- **Record-to-beat + progress bar** and a **live clock**.
+- **Settings drawer** — board name, last-incident date, record, near-miss
+  count, and your own A.L.A.R.A message lines, all persisted to `localStorage`
+  so state survives a reboot.
+- **Daily data** — a live radiation reading (Safecast) and an "Isotope of the
+  Day" (IAEA), refreshed once each morning by a scheduled script (see below).
+- **Offline-proof** — no external fonts or CDNs; renders fully even if the net
+  drops. Respects `prefers-reduced-motion` (kills the shake/spin/flash).
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Stack
 
-### `npm run build`
+- **React + Vite** → static `dist/`
+- No runtime dependencies beyond React. The daily pull script is plain Node
+  (18+), no npm packages.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Quick start (development)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+npm run dev          # http://localhost:5173
+```
 
-### `npm run eject`
+## Build & run on the kiosk PC
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+npm run build        # outputs dist/
+npx serve dist       # serve over http://localhost (NOT file://)
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Then launch the browser fullscreen/kiosk at that URL on boot, e.g.:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+chromium --kiosk --app=http://localhost:3000
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+> **Why `http://localhost`, not `file://`?** Same-origin `fetch` of
+> `today.json` and `localStorage` behave correctly only over a real origin.
+> A `file://` page breaks both.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Daily data pipeline
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The board only needs one refresh a day, so we avoid browser CORS and key
+exposure entirely: a **scheduled morning task** pulls the data and writes a
+single same-origin JSON file. The React app just reads it.
 
-### Code Splitting
+```bash
+npm run pull:today                       # writes public/today.json
+# or, when serving the built board, write into the served folder:
+ALARA_OUT=./dist/today.json npm run pull:today
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+**Sources**
 
-### Analyzing the Bundle Size
+| Data                | Source                                          | Notes                    |
+| ------------------- | ----------------------------------------------- | ------------------------ |
+| Radiation reading   | Safecast — `api.safecast.org/measurements.json` | CC0, no key for reads    |
+| Isotope of the Day  | IAEA Live Chart of Nuclides — `nds.iaea.org`    | enriches a baked-in list |
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+The script is **fail-safe**: if a source is unreachable it keeps the previous
+value (the board shows yesterday's, with a "cached data" note). If everything
+is down it still writes valid JSON using the built-in isotope rotation, so the
+board never sees broken data.
 
-### Making a Progressive Web App
+### Schedule it
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+**Linux/macOS (cron)** — every day at 06:00:
 
-### Advanced Configuration
+```cron
+0 6 * * * cd /path/to/alara-safety-board && ALARA_OUT=./dist/today.json /usr/bin/node scripts/pull-today.mjs >> /var/log/alara.log 2>&1
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+**Windows (Task Scheduler)** — daily trigger at 06:00, action:
 
-### Deployment
+```
+Program:   node
+Arguments: scripts\pull-today.mjs
+Start in:  C:\path\to\alara-safety-board
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+(set the `ALARA_OUT` env var to your served `today.json` path).
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## A.L.A.R.A's brain — two phases
+
+- **v1 (default, always on):** a baked-in bank of 50+ A.L.A.R.A one-liners in
+  her voice (`src/data/alaraLines.js`). Rotates daily, works with zero network,
+  literally can't break. Add your own in the Settings drawer — they merge in.
+- **v2 (optional, bolt-on):** a local **Ollama** riff. Enable it in Settings.
+  On the kiosk PC:
+
+  ```bash
+  ollama pull llama3.2:3b
+  export OLLAMA_ORIGINS="*"   # let the browser origin reach Ollama
+  # (restart the Ollama service after setting this)
+  ```
+
+  She then riffs on the day's real isotope/reading. If Ollama is down, times
+  out, or isn't installed, she **falls back to the v1 bank automatically**.
+
+---
+
+## Design language
+
+Industrial control-room: charcoal base, hazard-yellow/black caution-tape
+accents, safety green (good) / warning red (incident) / amber beacon (alert).
+Radiation trefoil, corner bolts on panels, monospace digits, wide-tracked
+uppercase labels — legible from across a room.
+
+## Project layout
+
+```
+index.html               Vite entry (inline trefoil favicon)
+public/today.json        Sample daily data (so it runs standalone)
+scripts/pull-today.mjs   Daily pull → today.json (cron / Task Scheduler)
+src/
+  App.jsx                Board layout + reset-gag orchestration
+  main.jsx               React entry
+  styles.css             Industrial control-room styling
+  components/            HeroCounter, Mascot, Clock, DailyData, RecordBar,
+                         Controls, Settings, Trefoil
+  state/                 useBoard (localStorage), useToday, useAlaraMessage
+  data/alaraLines.js     A.L.A.R.A's 50+ line bank (v1 brain)
+  lib/ollama.js          A.L.A.R.A's optional live brain (v2)
+```
