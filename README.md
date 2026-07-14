@@ -5,8 +5,8 @@ radioactive materials. It runs fullscreen on a wall monitor (kiosk-style) and
 makes the "Days Since Last Recordable Incident" streak impossible to ignore —
 with enough humor that the crew actually looks up.
 
-Named after **ALARA** — *As Low As Reasonably Achievable* — who is also the
-board's hard-hat mascot and site safety officer.
+Named after **ALARA** — *As Low As Reasonably Achievable* — the voice behind
+the board's daily safety message.
 
 ![Board](docs/preview.png)
 
@@ -17,13 +17,12 @@ board's hard-hat mascot and site safety officer.
 - **Hero counter** — "Days Since Last Recordable Incident" as big industrial
   digit tiles. The number is **derived from a stored last-incident date**, so it
   self-corrects across reboots and ticks over at midnight on its own.
-- **A.L.A.R.A mascot** — a hard-hat safety officer whose mood tracks the streak:
-  cool with shades at 30+ days, steady at 10–29, sweating in single digits, and
-  a dramatic face-plant the moment you reset. She delivers the **Safety Message
-  of the Day**.
+- **Safety Message of the Day** — one of A.L.A.R.A's one-liners, rotated daily.
+  A slim accent bar tracks the streak (green when healthy, amber in single
+  digits, red on reset) so the panel reads at a glance from across the room.
 - **Report Incident · Reset** — the intentional gag. Confirms, then fires an
-  amber-beacon alarm + screen shake + mascot faceplant before resetting the
-  streak to 0. Resetting is *memorable*.
+  amber-beacon alarm + screen shake before resetting the streak to 0.
+  Resetting is *memorable*.
 - **Log a Near-Miss** — celebrated, not punished. A monthly counter that
   auto-rolls to 0 each new month. Reporting a near-miss is a **catch**.
 - **Record-to-beat + progress bar** and a **live clock**.
@@ -149,7 +148,7 @@ src/
   App.jsx                Board layout + reset-gag orchestration
   main.jsx               React entry
   styles.css             Industrial control-room styling
-  components/            HeroCounter, Mascot, Clock, DailyData, RecordBar,
+  components/            HeroCounter, SafetyMessage, Clock, DailyData, RecordBar,
                          Controls, Settings, Trefoil
   state/                 useBoard (localStorage), useToday, useAlaraMessage
   data/alaraLines.js     A.L.A.R.A's 50+ line bank (v1 brain)

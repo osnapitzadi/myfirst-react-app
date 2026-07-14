@@ -259,73 +259,58 @@ body {
   }
 }
 
-/* ---------------------------------------------------------------- mascot */
+/* --------------------------------------------------- safety message of day */
 
-.panel--mascot {
+.panel--message {
   display: flex;
 }
-.mascot {
+.safety-msg {
   display: flex;
-  gap: clamp(14px, 2vw, 28px);
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
+  /* accent color, retinted by tone below */
+  --accent: var(--safety-green);
+  border-left: 4px solid var(--accent);
+  padding-left: clamp(14px, 2vw, 24px);
 }
-.mascot-portrait {
-  flex: none;
-  width: clamp(110px, 14vw, 190px);
-  height: clamp(110px, 14vw, 190px);
-  background: radial-gradient(circle at 50% 40%, #232a32, #12151a 75%);
-  border: 1px solid var(--charcoal-3);
-  border-radius: 14px;
-  padding: 6px;
-}
-.mascot-speech {
-  min-width: 0;
-}
-.mascot-name {
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-size: clamp(1rem, 1.8vw, 1.5rem);
-  color: var(--hazard-yellow);
+.safety-msg--good { --accent: var(--safety-green); }
+.safety-msg--ok { --accent: var(--hazard-yellow); }
+.safety-msg--warn { --accent: var(--amber); }
+.safety-msg--alarm { --accent: var(--warning-red); }
+
+.safety-msg-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  margin-bottom: 12px;
 }
-.mascot-title {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--ink-dim);
-  font-weight: 600;
+.safety-msg-trefoil {
+  color: var(--accent);
+  flex: none;
 }
-.mascot-message {
-  font-size: clamp(1.05rem, 1.9vw, 1.7rem);
-  line-height: 1.35;
-  margin: 10px 0 12px;
-  color: var(--ink);
-}
-.mascot-tag {
-  font-size: 0.68rem;
+.safety-msg-kicker {
   text-transform: uppercase;
   letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--ink-dim);
 }
-
-/* mascot SVG mood colors */
-.m-skin { fill: #e7b78a; }
-.m-vest { fill: var(--amber); }
-.m-hat { fill: var(--hazard-yellow); }
-.m-hat-badge { fill: var(--hazard-black); }
-.m-eye { fill: #12151a; }
-.m-mouth { fill: none; stroke: #12151a; stroke-width: 3; stroke-linecap: round; }
-.m-shades { fill: #12151a; }
-.m-sweat { fill: #5cc8ff; }
-.m-thumb { }
-
-.mascot--cool .mascot-name { color: var(--safety-green); }
-.mascot--sweating .mascot-name { color: var(--amber); }
-.mascot--faceplant .mascot-name { color: var(--warning-red); }
+.safety-msg-text {
+  font-size: clamp(1.3rem, 2.4vw, 2.1rem);
+  line-height: 1.35;
+  margin: 0;
+  color: var(--ink);
+  font-weight: 500;
+}
+.safety-msg-by {
+  margin-top: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
 
 /* ---------------------------------------------------------------- record */
 

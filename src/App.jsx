@@ -4,7 +4,7 @@ import useToday from './state/useToday.js'
 import useAlaraMessage from './state/useAlaraMessage.js'
 import Clock from './components/Clock.jsx'
 import HeroCounter from './components/HeroCounter.jsx'
-import Mascot from './components/Mascot.jsx'
+import SafetyMessage from './components/SafetyMessage.jsx'
 import DailyData from './components/DailyData.jsx'
 import RecordBar from './components/RecordBar.jsx'
 import Controls from './components/Controls.jsx'
@@ -14,11 +14,11 @@ import Trefoil from './components/Trefoil.jsx'
 // Persist the Ollama toggle on its own so it's independent of board state.
 const OLLAMA_KEY = 'alara.ollama.enabled'
 
-// Map streak length to A.L.A.R.A's baseline mood.
-function moodForStreak(streak) {
-  if (streak <= 9) return 'sweating'
-  if (streak <= 29) return 'okay'
-  return 'cool'
+// Map streak length to the message panel's accent tone.
+function toneForStreak(streak) {
+  if (streak <= 9) return 'warn'
+  if (streak <= 29) return 'ok'
+  return 'good'
 }
 
 export default function App() {
@@ -53,8 +53,8 @@ export default function App() {
     context,
   })
 
-  // During the alarm, A.L.A.R.A faceplants; otherwise her mood tracks the streak.
-  const mood = alarm ? 'faceplant' : moodForStreak(streak)
+  // During the alarm the message accent goes red; otherwise it tracks the streak.
+  const tone = alarm ? 'alarm' : toneForStreak(streak)
 
   // The reset gag: fire the beacon/shake/faceplant, then commit the reset and
   // let it ride for a few seconds of drama before clearing.
@@ -109,9 +109,9 @@ export default function App() {
         <HeroCounter days={streak} alarm={alarm} />
 
         <div className="board-grid">
-          <div className="panel panel--mascot">
+          <div className="panel panel--message">
             <Corners />
-            <Mascot mood={mood} message={message} source={source} />
+            <SafetyMessage tone={tone} message={message} source={source} />
           </div>
 
           <div className="panel panel--stats">
