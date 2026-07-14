@@ -22,6 +22,13 @@ function defaultState() {
     nearMissMonth: monthKey(new Date()),
     // Extra A.L.A.R.A lines the crew adds; merged with the baked-in bank.
     customLines: [],
+    // The board has no on-screen buttons (it's a wall display). Actions are
+    // driven by keypresses, so any external button that emits a key works.
+    // resetKey is HELD for holdSeconds to fire (guards against bumps);
+    // nearMissKey is a single tap.
+    resetKey: 'r',
+    nearMissKey: 'n',
+    holdSeconds: 2,
   }
 }
 

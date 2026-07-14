@@ -30,6 +30,9 @@ export default function Settings({ open, onClose, state, update, ollamaEnabled, 
       record: Math.max(0, Number(draft.record) || 0),
       nearMissCount: Math.max(0, Number(draft.nearMissCount) || 0),
       customLines: linesFromText(draft._customText ?? draft.customLines?.join('\n') ?? ''),
+      resetKey: firstChar(draft.resetKey, 'r'),
+      nearMissKey: firstChar(draft.nearMissKey, 'n'),
+      holdSeconds: clampNum(draft.holdSeconds, 2, 0.5, 10),
     })
     onClose()
   }
@@ -108,6 +111,47 @@ export default function Settings({ open, onClose, state, update, ollamaEnabled, 
               <small>Off = built-in bank only (always works offline).</small>
             </span>
           </label>
+
+          <div className="field-group">
+            <div className="field-group-title">External button / keyboard triggers</div>
+            <div className="field-row">
+              <label className="field">
+                <span>Reset key (hold)</span>
+                <input
+                  type="text"
+                  maxLength="1"
+                  value={draft.resetKey ?? 'r'}
+                  onChange={(e) => set('resetKey', e.target.value)}
+                />
+              </label>
+              <label className="field">
+                <span>Near-miss key (tap)</span>
+                <input
+                  type="text"
+                  maxLength="1"
+                  value={draft.nearMissKey ?? 'n'}
+                  onChange={(e) => set('nearMissKey', e.target.value)}
+                />
+              </label>
+              <label className="field">
+                <span>Hold (sec)</span>
+                <input
+                  type="number"
+                  min="0.5"
+                  max="10"
+                  step="0.5"
+                  value={draft.holdSeconds ?? 2}
+                  onChange={(e) => set('holdSeconds', e.target.value)}
+                />
+              </label>
+            </div>
+            <small className="field-hint">
+              The board has no on-screen buttons. Map your external button to emit
+              one of these keys. Hold the reset key for the set seconds to reset
+              the counter; tap the near-miss key to log one. Tap <b>S</b> anytime
+              to open this panel.
+            </small>
+          </div>
         </div>
 
         <div className="drawer-foot">
@@ -128,4 +172,15 @@ function linesFromText(text) {
     .split('\n')
     .map((l) => l.trim())
     .filter(Boolean)
+}
+
+function firstChar(value, fallback) {
+  const c = String(value ?? '').trim().charAt(0)
+  return c || fallback
+}
+
+function clampNum(value, fallback, min, max) {
+  const n = Number(value)
+  if (!Number.isFinite(n)) return fallback
+  return Math.min(max, Math.max(min, n))
 }

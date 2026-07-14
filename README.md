@@ -14,25 +14,52 @@ the board's daily safety message.
 
 ## Features
 
+- **One-screen kiosk** — the whole board is sized to exactly the viewport and
+  never scrolls. It's a wall display, so there are **no on-screen buttons** to
+  click; everything is driven by keypresses (see [Controls](#controls)).
 - **Hero counter** — "Days Since Last Recordable Incident" as big industrial
-  digit tiles. The number is **derived from a stored last-incident date**, so it
-  self-corrects across reboots and ticks over at midnight on its own.
+  digit tiles that fill the screen. The number is **derived from a stored
+  last-incident date**, so it self-corrects across reboots and ticks over at
+  midnight on its own.
 - **Safety Message of the Day** — one of A.L.A.R.A's one-liners, rotated daily.
   A slim accent bar tracks the streak (green when healthy, amber in single
   digits, red on reset) so the panel reads at a glance from across the room.
-- **Report Incident · Reset** — the intentional gag. Confirms, then fires an
-  amber-beacon alarm + screen shake before resetting the streak to 0.
-  Resetting is *memorable*.
-- **Log a Near-Miss** — celebrated, not punished. A monthly counter that
-  auto-rolls to 0 each new month. Reporting a near-miss is a **catch**.
+- **Report Incident · Reset** — the intentional gag. **Hold** the reset key/
+  button and a "Reporting Incident…" bar fills; complete the hold and it fires
+  an amber-beacon alarm + screen shake before resetting the streak to 0. A
+  stray bump can't do it — release early and nothing happens.
+- **Log a Near-Miss** — celebrated, not punished. A single tap bumps a monthly
+  counter that auto-rolls to 0 each new month. Reporting a near-miss is a
+  **catch**.
 - **Record-to-beat + progress bar** and a **live clock**.
-- **Settings drawer** — board name, last-incident date, record, near-miss
-  count, and your own A.L.A.R.A message lines, all persisted to `localStorage`
-  so state survives a reboot.
+- **Settings drawer** — hidden maintenance panel (tap **S**): board name,
+  last-incident date, record, near-miss count, your own A.L.A.R.A message
+  lines, and the trigger-key mapping, all persisted to `localStorage` so state
+  survives a reboot.
 - **Daily data** — a live radiation reading (Safecast) and an "Isotope of the
   Day" (IAEA), refreshed once each morning by a scheduled script (see below).
 - **Offline-proof** — no external fonts or CDNs; renders fully even if the net
   drops. Respects `prefers-reduced-motion` (kills the shake/spin/flash).
+
+## Controls
+
+The board face has no clickable controls — it's driven entirely by the
+keyboard, so **any external button that emits a keypress** (USB foot pedal,
+macropad, Arduino/GPIO-to-HID, or a plain keyboard) can drive it. Map your
+button to the matching key; defaults below are configurable in the settings
+drawer.
+
+| Action                | Default | How              |
+| --------------------- | ------- | ---------------- |
+| Report incident/reset | `R`     | **hold** ~2s     |
+| Log a near-miss       | `N`     | single tap       |
+| Open settings drawer  | `S`     | single tap       |
+
+> The reset is a *hold* (not a tap) on purpose: a physical button held down, or
+> a key held for the configured seconds, is deliberate — an accidental bump
+> won't wipe the streak. Not sure what hardware you'll use yet? Pick any button
+> that sends a keystroke and set the keys to match; nothing in the code is tied
+> to a specific device.
 
 ## Stack
 
@@ -149,7 +176,7 @@ src/
   main.jsx               React entry
   styles.css             Industrial control-room styling
   components/            HeroCounter, SafetyMessage, Clock, DailyData, RecordBar,
-                         Controls, Settings, Trefoil
+                         Settings, Trefoil
   state/                 useBoard (localStorage), useToday, useAlaraMessage
   data/alaraLines.js     A.L.A.R.A's 50+ line bank (v1 brain)
   lib/ollama.js          A.L.A.R.A's optional live brain (v2)
