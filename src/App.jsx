@@ -3,8 +3,9 @@ import useBoard from './state/useBoard.js'
 import useToday from './state/useToday.js'
 import useAlaraMessage from './state/useAlaraMessage.js'
 import Clock from './components/Clock.jsx'
-import HeroCounter from './components/HeroCounter.jsx'
+import HeroStat from './components/HeroStat.jsx'
 import SafetyMessage from './components/SafetyMessage.jsx'
+import { skidsMovedToday } from './lib/daily.js'
 import DailyData from './components/DailyData.jsx'
 import RecordBar from './components/RecordBar.jsx'
 import Settings from './components/Settings.jsx'
@@ -174,7 +175,22 @@ export default function App() {
       </header>
 
       <main className="board-main">
-        <HeroCounter days={streak} alarm={alarm} />
+        {/* Three equal headline counters. Skids is a daily 1–100 gag; the
+            third is a placeholder until we decide what it tracks. */}
+        <div className="hero-row">
+          <HeroStat
+            label="Days Since Last Recordable Incident"
+            value={streak}
+            variant="green"
+            alarm={alarm}
+          />
+          <HeroStat
+            label="Skids Moved Today"
+            value={skidsMovedToday()}
+            variant="amber"
+          />
+          <HeroStat label="To Be Announced" variant="tba" placeholder />
+        </div>
 
         <div className="info-band">
           <div className="panel panel--message">

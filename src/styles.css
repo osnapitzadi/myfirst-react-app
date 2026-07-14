@@ -178,31 +178,51 @@ body {
 
 /* -------------------------------------------------------------------- hero */
 
-/* Hero fills the space between header and the info band, staying centered.
-   Digit size is driven by viewport height so it never pushes the band off. */
-.hero {
+/* Three equal headline counters filling the space between header and the
+   info band. Each column centers a label над its digit tiles; thin dividers
+   between them read as a control-room panel. */
+.hero-row {
   flex: 1;
   min-height: 0;
-  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: clamp(10px, 2vw, 32px);
+}
+
+.hero-stat {
+  min-width: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 1.6vh, 22px);
+  text-align: center;
+  gap: clamp(8px, 1.6vh, 20px);
+  padding: 0 clamp(6px, 1vw, 20px);
+}
+.hero-stat + .hero-stat {
+  border-left: 1px solid var(--charcoal-3);
 }
 
 .hero-label {
   text-transform: uppercase;
-  letter-spacing: 0.28em;
-  font-size: clamp(0.8rem, 1.6vw, 1.4rem);
+  letter-spacing: 0.22em;
+  font-size: clamp(0.66rem, 1.05vw, 1.05rem);
   color: var(--ink-dim);
   font-weight: 700;
+  line-height: 1.3;
+  /* keep the digit rows aligned across columns despite different label lengths */
+  min-height: 2.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .digit-board {
   display: flex;
   justify-content: center;
-  gap: clamp(6px, 1vw, 16px);
+  gap: clamp(5px, 0.7vw, 12px);
 }
 
 .digit-tile {
@@ -213,7 +233,7 @@ body {
     inset 0 2px 6px rgba(0, 0, 0, 0.9),
     inset 0 -1px 0 rgba(255, 255, 255, 0.05),
     0 6px 18px rgba(0, 0, 0, 0.5);
-  padding: clamp(4px, 1vh, 14px) clamp(10px, 1.6vw, 26px);
+  padding: clamp(3px, 0.8vh, 12px) clamp(6px, 1vw, 18px);
   position: relative;
   overflow: hidden;
 }
@@ -230,18 +250,38 @@ body {
 .digit-tile-inner {
   font-family: var(--mono);
   font-weight: 700;
-  /* min() against vw keeps very wide/short screens from overflowing sideways */
-  font-size: min(38vh, 20vw);
+  /* sized for three columns: min() against vw keeps ~3 digits per column from
+     overflowing sideways on wide/short screens */
+  font-size: min(26vh, 8vw);
   line-height: 1;
   color: var(--safety-green);
   text-shadow: 0 0 18px rgba(41, 209, 122, 0.45);
   display: block;
 }
 
-/* when the board is in alarm, digits go red */
-.hero--alarm .digit-tile-inner {
+/* per-column accent colors */
+.hero-stat--amber .digit-tile-inner {
+  color: var(--hazard-yellow);
+  text-shadow: 0 0 18px rgba(255, 207, 0, 0.4);
+}
+.hero-stat--tba .digit-tile-inner,
+.hero-stat--placeholder .digit-tile-inner {
+  color: var(--steel);
+  text-shadow: none;
+}
+
+/* when the streak column is in alarm, its digits go red */
+.hero-stat--alarm .digit-tile-inner {
   color: var(--warning-red);
   text-shadow: 0 0 18px rgba(255, 59, 48, 0.55);
+}
+
+.hero-tba {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: clamp(0.6rem, 0.9vw, 0.85rem);
+  font-weight: 700;
+  color: var(--steel);
 }
 
 /* ------------------------------------------------- info band (bottom row) */

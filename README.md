@@ -17,10 +17,15 @@ the board's daily safety message.
 - **One-screen kiosk** — the whole board is sized to exactly the viewport and
   never scrolls. It's a wall display, so there are **no on-screen buttons** to
   click; everything is driven by keypresses (see [Controls](#controls)).
-- **Hero counter** — "Days Since Last Recordable Incident" as big industrial
-  digit tiles that fill the screen. The number is **derived from a stored
-  last-incident date**, so it self-corrects across reboots and ticks over at
-  midnight on its own.
+- **Hero row — three headline counters** in equal columns, big industrial
+  digit tiles filling the screen:
+  1. **Days Since Last Recordable Incident** — **derived from a stored
+     last-incident date**, so it self-corrects across reboots and ticks over at
+     midnight on its own.
+  2. **Skids Moved Today** — an inside-joke tally: a deterministic daily random
+     (1–100), stable all day, fresh each morning at midnight.
+  3. **To Be Announced** — a dim placeholder column, reserved for a third
+     metric that's still being decided.
 - **Safety Message of the Day** — one of A.L.A.R.A's one-liners, rotated daily.
   A slim accent bar tracks the streak (green when healthy, amber in single
   digits, red on reset) so the panel reads at a glance from across the room.
@@ -175,9 +180,10 @@ src/
   App.jsx                Board layout + reset-gag orchestration
   main.jsx               React entry
   styles.css             Industrial control-room styling
-  components/            HeroCounter, SafetyMessage, Clock, DailyData, RecordBar,
+  components/            HeroStat, SafetyMessage, Clock, DailyData, RecordBar,
                          Settings, Trefoil
   state/                 useBoard (localStorage), useToday, useAlaraMessage
   data/alaraLines.js     A.L.A.R.A's 50+ line bank (v1 brain)
+  lib/daily.js           Deterministic daily-random (Skids Moved Today)
   lib/ollama.js          A.L.A.R.A's optional live brain (v2)
 ```
