@@ -77,6 +77,8 @@ drawer.
 ## Quick start (development)
 
 ```bash
+git clone https://github.com/osnapitzadi/alara-safety-board.git
+cd alara-safety-board
 npm install
 npm run dev          # http://localhost:5173
 ```
