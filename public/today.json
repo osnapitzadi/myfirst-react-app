@@ -1,0 +1,22 @@
+{
+  "date": "2026-07-14",
+  "generatedAt": "2026-07-14T06:00:00Z",
+  "radiation": {
+    "value": 38,
+    "unit": "CPM",
+    "location": "Fukushima Prefecture, JP",
+    "device": "Safecast bGeigie",
+    "capturedAt": "2026-07-14T05:52:00Z"
+  },
+  "isotope": {
+    "name": "Cobalt-60",
+    "symbol": "Co-60",
+    "halfLife": "5.27 years",
+    "decayMode": "β⁻ then γ",
+    "note": "Industrial radiography and sterilization workhorse. Handle behind shielding — those 1.17 & 1.33 MeV gammas don't ask permission."
+  },
+  "sources": {
+    "radiation": "Safecast (api.safecast.org, CC0)",
+    "isotope": "IAEA Live Chart of Nuclides (nds.iaea.org)"
+  }
+}
