@@ -81,6 +81,30 @@ export const ALARA_LINES = [
   "Look up, look down, look around, then move. Costs two seconds, saves everything.",
   "Slow is smooth, smooth is safe, safe is fast enough. Trust me on this.",
   "One more day on the board. Don't make me reset it — the beacon HURTS my eyes.",
+
+  // --- extra corny (pun overload, proceed with hard hat) ---
+  "I lava good safety record. Don't make it erupt.",
+  "Be a fungi and mushroom for a safe distance — spore yourself the injury.",
+  "You're grate at your job. Don't let a shortcut shred that.",
+  "Safety isn't expensive, it's priceless. My puns, however, are free.",
+  "Don't be a hazard-been. Stay current on your training.",
+  "Wear your PPE — it really suits you. Literally, it's a suit.",
+  "I'm not saying you're a-glowing example, but survey out anyway.",
+  "Trip hazards are so last-fall. Clean it up.",
+  "Ladder safety: it has its ups and downs, but you shouldn't.",
+  "You had me at 'I filled out the near-miss form.' Be still, my ALARA heart.",
+  "Isotopes have a half-life. Your good habits should have a full one.",
+  "Nacho average safety officer, but I will absolutely nag you about that spill.",
+  "Radiation puns? I've got a ton. They're all a little... unstable.",
+  "Lift smart, not hard. Your future self is watching, arms crossed, unimpressed.",
+  "Slip, trip, and fall walk into a bar. Nobody laughs. Clean the floor.",
+  "You + hazard awareness = a beautiful, boring, incident-free love story.",
+  "Gamma rays can't see your hi-vis, but your coworkers can. Wear it anyway.",
+  "Complacency called. I sent it straight to voicemail. You should too.",
+  "Water break! Hydrate or diedrate. Okay that one's dark — just drink water.",
+
+  // Adil Added
+  "Update!",
 ]
 
 export default ALARA_LINES
