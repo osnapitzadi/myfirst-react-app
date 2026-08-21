@@ -1,19 +1,21 @@
 {
-  "date": "2026-07-14",
-  "generatedAt": "2026-07-14T06:00:00Z",
+  "date": "2026-08-21",
+  "generatedAt": "2026-08-21T12:10:50.240Z",
   "radiation": {
-    "value": 38,
-    "unit": "CPM",
-    "location": "Fukushima Prefecture, JP",
-    "device": "Safecast bGeigie",
-    "capturedAt": "2026-07-14T05:52:00Z"
+    "value": 54,
+    "unit": "cpm",
+    "location": "Chernobyl Exclusion Zone",
+    "device": "Safecast sensor",
+    "capturedAt": "2022-07-24T11:45:51.000Z"
   },
   "isotope": {
-    "name": "Cobalt-60",
-    "symbol": "Co-60",
-    "halfLife": "5.27 years",
-    "decayMode": "β⁻ then γ",
-    "note": "Industrial radiography and sterilization workhorse. Handle behind shielding — those 1.17 & 1.33 MeV gammas don't ask permission."
+    "name": "Cesium-137",
+    "symbol": "Cs-137",
+    "z": 55,
+    "a": 137,
+    "halfLife": "30.1 years",
+    "decayMode": "β⁻",
+    "note": "The gauge-and-blood-irradiator classic. Water-soluble, so contamination spreads fast — respect the wipe test."
   },
   "sources": {
     "radiation": "Safecast (api.safecast.org, CC0)",
