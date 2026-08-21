@@ -105,6 +105,26 @@ export const ALARA_LINES = [
 
   // Adil Added
   "Update!",
+
+  // --- positive / encouraging ---
+  "Look at this crew — another day of watching out for each other. Proud of you.",
+  "Every safe choice you made today mattered, even the ones nobody saw.",
+  "You're the reason someone got home safe tonight. That's not small.",
+  "Great teams aren't lucky, they're careful. And this team is great.",
+  "Thank you for slowing down when it counted. That's real strength.",
+  "Small habits, huge impact. Keep stacking those good days.",
+  "You showed up, you looked out, you did it right. That's a win.",
+  "Safety is just love with a clipboard — and you all wear it well.",
+  "The best kind of quiet is a shift with no incidents. Nice work keeping it quiet.",
+  "You've got each other's backs out there. It shows, and it matters.",
+  "Progress isn't loud. It's 9 days, then 10, then 100. Keep going.",
+  "Your careful hands built today's clean record. Take the credit.",
+  "Kindness is a safety tool too — check on your crew today.",
+  "Good catch, good call, good day. You make this place better.",
+  "Being safe isn't slowing down; it's making sure you get to keep going.",
+  "One good decision at a time — that's how legends of the loading dock are made.",
+  "You matter more than any deadline. Never forget that out there.",
+  "Today's streak is a gift you gave the whole team. Thank you.",
 ]
 
 export default ALARA_LINES
