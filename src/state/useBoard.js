@@ -4,11 +4,11 @@ import { useCallback, useEffect, useState } from 'react'
 // this one key. The kiosk PC never clears it; the Settings drawer edits it.
 const STORAGE_KEY = 'alara.board.v1'
 
-// A sensible starting state for a fresh board. lastIncidentDate defaults to a
-// week ago so the counter shows something believable on first boot.
+// A sensible starting state for a fresh board. lastIncidentDate defaults to
+// 9 days ago so the counter shows something believable on first boot.
 function defaultState() {
   const d = new Date()
-  d.setDate(d.getDate() - 7)
+  d.setDate(d.getDate() - 9)
   return {
     boardName: 'A.L.A.R.A SAFETY BOARD',
     // ISO date (YYYY-MM-DD) of the last recordable incident. The hero counter
