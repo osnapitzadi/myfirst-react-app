@@ -91,6 +91,7 @@ body {
 /* -------------------------------------------------------------------- header */
 
 .board-head {
+  position: relative;
   flex: none;
   display: flex;
   align-items: center;
@@ -99,6 +100,18 @@ body {
   padding: clamp(8px, 1.2vw, 16px) clamp(16px, 2.5vw, 40px);
   border-bottom: 1px solid var(--charcoal-3);
   background: linear-gradient(180deg, var(--charcoal-1), transparent);
+}
+
+/* Brand logo, centered in the top bar independent of the title/clock widths. */
+.board-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: clamp(28px, 4.5vh, 56px);
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .board-title {
@@ -350,6 +363,19 @@ body {
   margin: 0;
   color: var(--ink);
   font-weight: 500;
+  /* Replayed on every line swap because the element is keyed on the message. */
+  animation: msg-fade 0.5s ease both;
+}
+
+@keyframes msg-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .safety-msg-by {
   margin-top: 12px;
@@ -800,5 +826,6 @@ body {
   .nearmiss-tally--pop { animation: none; }
   .settings-btn:hover { transform: none; }
   .record-fill { transition: none; }
+  .safety-msg-text { animation: none; }
   * { scroll-behavior: auto; }
 }

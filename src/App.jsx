@@ -171,6 +171,12 @@ export default function App() {
           <Trefoil size={34} className="board-trefoil" spin={alarm} />
           <h1>{state.boardName}</h1>
         </div>
+        <img
+          className="board-logo"
+          src={`${import.meta.env.BASE_URL}logo.png`}
+          alt=""
+          aria-hidden="true"
+        />
         <Clock />
       </header>
 
