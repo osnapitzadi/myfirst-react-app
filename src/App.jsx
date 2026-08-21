@@ -4,6 +4,7 @@ import useToday from './state/useToday.js'
 import useAlaraMessage from './state/useAlaraMessage.js'
 import Clock from './components/Clock.jsx'
 import HeroStat from './components/HeroStat.jsx'
+import Weather from './components/Weather.jsx'
 import SafetyMessage from './components/SafetyMessage.jsx'
 import useSkidsMoved from './state/useSkidsMoved.js'
 import DailyData from './components/DailyData.jsx'
@@ -186,12 +187,7 @@ export default function App() {
         {/* Three equal headline counters. Skids is a daily 1–100 gag; the
             third is a placeholder until we decide what it tracks. */}
         <div className="hero-row">
-          <HeroStat
-            label="Days Since Last Recordable Incident"
-            value={streak}
-            variant="green"
-            alarm={alarm}
-          />
+          <Weather />
           <HeroStat
             label="Skids Moved Today"
             value={skids}
@@ -209,12 +205,14 @@ export default function App() {
           <div className="panel panel--stats">
             <Corners />
             <RecordBar streak={streak} record={state.record} />
+            {/* Repurposed tile: now shows the days-since-last-recordable streak
+                (the near-miss key still logs to state.nearMissCount silently). */}
             <div className={`nearmiss-tally ${justLogged ? 'nearmiss-tally--pop' : ''}`}>
-              <span className="nearmiss-count">{state.nearMissCount}</span>
+              <span className="nearmiss-count">{streak}</span>
               <span className="nearmiss-label">
-                Near-misses caught
+                Days since last
                 <br />
-                this month
+                recordable
               </span>
             </div>
           </div>
