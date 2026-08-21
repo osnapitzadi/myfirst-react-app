@@ -270,6 +270,23 @@ body {
   color: var(--safety-green);
   text-shadow: 0 0 18px rgba(41, 209, 122, 0.45);
   display: block;
+  /* Replayed whenever a digit changes: HeroStat keys this span on its value,
+     so a new digit remounts and rolls down into the tile (which clips it). */
+  animation: digit-roll 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes digit-roll {
+  0% {
+    transform: translateY(-65%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* per-column accent colors */
@@ -295,6 +312,32 @@ body {
   font-size: clamp(0.6rem, 0.9vw, 0.85rem);
   font-weight: 700;
   color: var(--steel);
+}
+
+/* third hero column: Safety Message of the Day (text instead of digit tiles) */
+.tip-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.6vh, 18px);
+  text-align: center;
+  max-width: 32ch;
+}
+.tip-topic {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.2vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--hazard-yellow);
+}
+.tip-text {
+  margin: 0;
+  color: var(--ink-dim);
+  font-weight: 600;
+  font-size: clamp(0.8rem, 1.1vw, 1.15rem);
+  line-height: 1.3;
 }
 
 /* ------------------------------------------------- info band (bottom row) */
@@ -827,5 +870,6 @@ body {
   .settings-btn:hover { transform: none; }
   .record-fill { transition: none; }
   .safety-msg-text { animation: none; }
+  .digit-tile-inner { animation: none; }
   * { scroll-behavior: auto; }
 }

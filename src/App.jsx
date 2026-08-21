@@ -5,8 +5,9 @@ import useAlaraMessage from './state/useAlaraMessage.js'
 import Clock from './components/Clock.jsx'
 import HeroStat from './components/HeroStat.jsx'
 import SafetyMessage from './components/SafetyMessage.jsx'
-import { skidsMovedToday } from './lib/daily.js'
+import useSkidsMoved from './state/useSkidsMoved.js'
 import DailyData from './components/DailyData.jsx'
+import DailySafetyTip from './components/DailySafetyTip.jsx'
 import RecordBar from './components/RecordBar.jsx'
 import Settings from './components/Settings.jsx'
 import Trefoil from './components/Trefoil.jsx'
@@ -24,6 +25,7 @@ function toneForStreak(streak) {
 export default function App() {
   const { state, streak, update, reportIncident, logNearMiss } = useBoard()
   const { today, status } = useToday()
+  const skids = useSkidsMoved()
 
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [alarm, setAlarm] = useState(false) // reset-gag beacon/shake
@@ -192,10 +194,10 @@ export default function App() {
           />
           <HeroStat
             label="Skids Moved Today"
-            value={skidsMovedToday()}
+            value={skids}
             variant="amber"
           />
-          <HeroStat label="To Be Announced" variant="tba" placeholder />
+          <DailySafetyTip />
         </div>
 
         <div className="info-band">

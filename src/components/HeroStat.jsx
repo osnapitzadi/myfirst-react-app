@@ -37,7 +37,10 @@ export default function HeroStat({
       >
         {digits.map((d, i) => (
           <span className="digit-tile" key={i}>
-            <span className="digit-tile-inner">{d}</span>
+            {/* keyed on the digit so it remounts and replays the roll on change */}
+            <span className="digit-tile-inner" key={d}>
+              {d}
+            </span>
           </span>
         ))}
       </div>
