@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>A.L.A.R.A Safety Board - start the kiosk server at logon and keep it running. Serves the board at http://localhost:5173.</Description>
+    <Author>DESKTOP-8P7DPDL\Shipping</Author>
+    <URI>\ALARA Kiosk Server</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <!-- Start the server shortly after the kiosk user logs in (auto-login
+         recommended so this fires on every restart without a keypress). -->
+    <LogonTrigger>
+      <Enabled>true</Enabled>
+      <UserId>DESKTOP-8P7DPDL\Shipping</UserId>
+      <Delay>PT15S</Delay>
+    </LogonTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>DESKTOP-8P7DPDL\Shipping</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <!-- Only ever one server; don't spawn a second if one is already running. -->
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <!-- PT0S = no execution time limit; the server is meant to run forever. -->
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <Priority>6</Priority>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <!-- If the server ever exits/crashes, relaunch it. -->
+    <RestartOnFailure>
+      <Interval>PT1M</Interval>
+      <Count>999</Count>
+    </RestartOnFailure>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\Users\Shipping\Desktop\myfirst-react-app-master\scripts\serve-kiosk.cmd</Command>
+    </Exec>
+  </Actions>
+</Task>
