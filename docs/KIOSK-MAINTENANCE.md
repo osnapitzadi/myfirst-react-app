@@ -25,6 +25,8 @@ Three scheduled tasks run everything. All start automatically at logon.
 | **ALARA Kiosk Server** | Runs the board server (hidden, self-restarting) | At logon |
 | **ALARA Daily Pull** | Refreshes weather / radiation / isotope data | 6 AM daily + logon; catches up if the PC was off |
 | **ALARA Kiosk Browser** | Opens the board fullscreen (Chrome, else Edge) | At logon (waits for the server) |
+| **ALARA Screens Off** | Turns off all connected screens | 2:00 PM daily |
+| **ALARA Screens On** | Wakes all connected screens | 6:00 AM daily |
 
 Supporting files (in `scripts\`):
 
@@ -33,6 +35,7 @@ Supporting files (in `scripts\`):
 - `pull-today.cmd` / `pull-today.mjs` — the daily data pull
 - `launch-kiosk-browser.cmd` — opens the fullscreen browser
 - `kiosk-power-setup.cmd` — one-time power/lid configuration
+- `screens-off.ps1` / `screens-on.ps1` — turn the displays off / wake them
 - `*.log` — run logs (git-ignored)
 
 ---
@@ -110,10 +113,12 @@ Run these once to (re)install everything:
 ```bash
 cd C:\Users\Shipping\Desktop\myfirst-react-app-master
 
-:: install the three tasks
+:: install the tasks
 schtasks /Create /TN "ALARA Kiosk Server"  /XML "scripts\alara-serve-kiosk.xml"  /F
 schtasks /Create /TN "ALARA Daily Pull"    /XML "scripts\alara-pull-today.xml"    /F
 schtasks /Create /TN "ALARA Kiosk Browser" /XML "scripts\alara-kiosk-browser.xml" /F
+schtasks /Create /TN "ALARA Screens Off"   /XML "scripts\alara-screens-off.xml"   /F
+schtasks /Create /TN "ALARA Screens On"    /XML "scripts\alara-screens-on.xml"    /F
 ```
 
 Then, **as administrator**, run the power setup once:
@@ -128,6 +133,39 @@ Also make sure:
   user name and password"), so the tasks fire on every restart with no keypress.
 - The **external monitor is the primary display** (or the lid is closed so it's
   the only active screen) — the fullscreen browser opens on the active display.
+
+---
+
+## Display schedule (screens off 2 PM, on 6 AM)
+
+The screens turn **off at 2:00 PM** and **back on at 6:00 AM** every day, via the
+**ALARA Screens Off** / **ALARA Screens On** tasks. The board server keeps
+running the whole time — only the physical displays sleep.
+
+**Test right now:**
+```bash
+schtasks /Run /TN "ALARA Screens On"
+:: (careful — this blanks the screen until you move the mouse:)
+schtasks /Run /TN "ALARA Screens Off"
+```
+The screens wake on any mouse/keyboard input, so after testing "off," just move
+the mouse.
+
+**Change the times:** edit the `<StartBoundary>` time in
+`scripts\alara-screens-off.xml` / `scripts\alara-screens-on.xml` (the date part
+doesn't matter, only the `HH:MM:SS`), then re-import that task with
+`schtasks /Create /TN "..." /XML "..." /F`. Or change the **Triggers** time in
+Task Scheduler directly.
+
+**Turn the schedule off:** disable or delete the two tasks:
+```bash
+schtasks /Change /TN "ALARA Screens Off" /DISABLE
+schtasks /Change /TN "ALARA Screens On"  /DISABLE
+```
+
+> Note: because a mouse bump wakes the displays, if someone uses the machine
+> after 2 PM the screens come back on. On an unattended kiosk nothing generates
+> input, so they stay off until 6 AM.
 
 ---
 
@@ -169,6 +207,8 @@ Board state (streak, record, custom lines) lives in the browser's
 schtasks /Delete /TN "ALARA Kiosk Server"  /F
 schtasks /Delete /TN "ALARA Daily Pull"    /F
 schtasks /Delete /TN "ALARA Kiosk Browser" /F
+schtasks /Delete /TN "ALARA Screens Off"   /F
+schtasks /Delete /TN "ALARA Screens On"    /F
 ```
 Power settings can be reverted in **Settings → System → Power** (or by choosing
 a different power plan).
