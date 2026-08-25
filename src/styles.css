@@ -30,10 +30,19 @@
   box-sizing: border-box;
 }
 
-/* Kiosk: hide the cursor after idle (toggled by src/lib/idleCursor.js). */
-body.cursor-idle,
-body.cursor-idle * {
-  cursor: none !important;
+/* Kiosk: the board face shows NO mouse cursor. The maintenance drawer (opened
+   with the S key) restores a usable cursor so settings stay clickable. */
+body {
+  cursor: none;
+}
+.drawer-scrim,
+.drawer,
+.drawer input,
+.drawer textarea,
+.drawer button,
+.drawer .btn,
+.drawer-close {
+  cursor: auto;
 }
 
 html,

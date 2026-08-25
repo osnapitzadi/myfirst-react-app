@@ -191,8 +191,9 @@ app (Lenovo Vantage, Dell Power Manager, etc.) is installed, make sure it isn't
 overriding the lid/sleep settings.
 
 **Cursor won't hide.**
-It hides after 10 seconds of no mouse movement and returns on movement — this is
-per-page, so the board must have focus.
+The board hides the mouse cursor entirely; it only reappears inside the settings
+drawer (press `S`) so you can click. If you still see a cursor on the board face,
+make sure the browser window is focused and on the board tab.
 
 **Start fresh / wipe the counter.**
 Board state (streak, record, custom lines) lives in the browser's
