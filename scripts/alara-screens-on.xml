@@ -26,7 +26,12 @@
     <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
     <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
     <AllowHardTerminate>true</AllowHardTerminate>
-    <StartWhenAvailable>true</StartWhenAvailable>
+    <!-- Fire at exactly 6:00. StartWhenAvailable=true batches the run into a
+         maintenance window and delays it up to ~10 min even when the PC was on
+         the whole time. The kiosk never sleeps, so the 6 AM start is never
+         genuinely missed; and if the PC ever were off at 6 AM it would boot with
+         the displays already on, so no catch-up is needed. -->
+    <StartWhenAvailable>false</StartWhenAvailable>
     <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
     <AllowStartOnDemand>true</AllowStartOnDemand>
     <Enabled>true</Enabled>

@@ -7,6 +7,15 @@
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>
+      <!-- Re-blank every 15 min from 2 PM until 6 AM (16h). The display never
+           times out on its own (never-sleep kiosk), so anything that wakes it at
+           night - a wake timer, Windows Update, maintenance - would otherwise
+           leave it on until the next 2 PM. Repeating keeps it dark. -->
+      <Repetition>
+        <Interval>PT15M</Interval>
+        <Duration>PT16H</Duration>
+        <StopAtDurationEnd>true</StopAtDurationEnd>
+      </Repetition>
       <StartBoundary>2026-08-25T14:00:00</StartBoundary>
       <Enabled>true</Enabled>
       <ScheduleByDay>
