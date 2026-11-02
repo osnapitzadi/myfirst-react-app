@@ -25,8 +25,6 @@ Three scheduled tasks run everything. All start automatically at logon.
 | **ALARA Kiosk Server** | Runs the board server (hidden, self-restarting) | At logon |
 | **ALARA Daily Pull** | Refreshes weather / radiation / isotope data | 6 AM daily + logon; catches up if the PC was off |
 | **ALARA Kiosk Browser** | Opens the board fullscreen (Chrome, else Edge) | At logon (waits for the server) |
-| **ALARA Screens Off** | Turns off all connected screens | 2:00 PM daily |
-| **ALARA Screens On** | Wakes all connected screens | 6:00 AM daily |
 
 Supporting files (in `scripts\`):
 
@@ -35,7 +33,6 @@ Supporting files (in `scripts\`):
 - `pull-today.cmd` / `pull-today.mjs` — the daily data pull
 - `launch-kiosk-browser.cmd` — opens the fullscreen browser
 - `kiosk-power-setup.cmd` — one-time power/lid configuration
-- `screens-off.ps1` / `screens-on.ps1` — turn the displays off / wake them
 - `*.log` — run logs (git-ignored)
 
 ---
@@ -117,8 +114,6 @@ cd C:\Users\Shipping\Desktop\myfirst-react-app-master
 schtasks /Create /TN "ALARA Kiosk Server"  /XML "scripts\alara-serve-kiosk.xml"  /F
 schtasks /Create /TN "ALARA Daily Pull"    /XML "scripts\alara-pull-today.xml"    /F
 schtasks /Create /TN "ALARA Kiosk Browser" /XML "scripts\alara-kiosk-browser.xml" /F
-schtasks /Create /TN "ALARA Screens Off"   /XML "scripts\alara-screens-off.xml"   /F
-schtasks /Create /TN "ALARA Screens On"    /XML "scripts\alara-screens-on.xml"    /F
 ```
 
 Then, **as administrator**, run the power setup once:
@@ -136,65 +131,6 @@ Also make sure:
 
 ---
 
-## Display schedule (screens off 2 PM, on 6 AM)
-
-The screens turn **off at 2:00 PM** and **back on at 6:00 AM** every day, via the
-**ALARA Screens Off** / **ALARA Screens On** tasks. The board server keeps
-running the whole time — only the physical displays sleep.
-
-Because the kiosk never sleeps and the display has no idle timeout, the only
-thing that blanks the screen is the Off task. So **Screens Off repeats every 15
-minutes from 2 PM until 6 AM** — if anything wakes the display overnight (a wake
-timer, Windows Update, Automatic Maintenance), it gets re-blanked within ~15 min
-instead of staying on until the next afternoon. To also stop the wake at its
-source, disable wake timers and maintenance wake (run in an **admin** terminal):
-
-```bash
-powercfg /setacvalueindex SCHEME_CURRENT SUB_SLEEP BD3B718A-0680-4D9D-8AB2-E1D2B4AC806D 0
-powercfg /setdcvalueindex SCHEME_CURRENT SUB_SLEEP BD3B718A-0680-4D9D-8AB2-E1D2B4AC806D 0
-powercfg /setactive SCHEME_CURRENT
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" /v WakeUp /t REG_DWORD /d 0 /f
-```
-
-**Test right now:**
-```bash
-schtasks /Run /TN "ALARA Screens On"
-:: (careful — this blanks the screen until you move the mouse:)
-schtasks /Run /TN "ALARA Screens Off"
-```
-The screens wake on any mouse/keyboard input, so after testing "off," just move
-the mouse.
-
-**Change the times:** edit the `<StartBoundary>` time in
-`scripts\alara-screens-off.xml` / `scripts\alara-screens-on.xml` (the date part
-doesn't matter, only the `HH:MM:SS`), then re-import that task with
-`schtasks /Create /TN "..." /XML "..." /F`. Or change the **Triggers** time in
-Task Scheduler directly.
-
-**Turn the schedule off:** disable or delete the two tasks:
-```bash
-schtasks /Change /TN "ALARA Screens Off" /DISABLE
-schtasks /Change /TN "ALARA Screens On"  /DISABLE
-```
-
-> Note: because a mouse bump wakes the displays, if someone uses the machine
-> after 2 PM the screens come back on. On an unattended kiosk nothing generates
-> input, so they stay off until 6 AM.
-
-> **Important — the machine must never lock.** A monitor blanked this way only
-> wakes on input delivered to the *active* desktop. If the machine locks
-> overnight, the active desktop becomes the secure lock screen and the 6 AM wake
-> task can't reach it, so the screens stay dark. Disable the screensaver and the
-> auto-lock so the session stays unlocked (run once; the `HKLM` one needs an
-> **admin** terminal):
->
-> ```bash
-> reg add "HKCU\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 0 /f
-> reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v InactivityTimeoutSecs /t REG_DWORD /d 0 /f
-> ```
-
----
-
 ## Troubleshooting
 
 **Board shows old data / stale banner.**
@@ -206,29 +142,6 @@ press **Ctrl+R** to see it immediately. (Data lives in `public\today.json`.)
 The server is down. Check with the port command above; restart the server task.
 Check `serve-kiosk.log` for repeated "server exited" lines (a crash loop) — if
 so, run `npm.cmd install` in the project folder, then restart.
-
-**Screens don't wake at 6 AM and the PC seems asleep (you have to wake it).**
-This laptop uses **Modern Standby** (S0 Low Power Idle) — check with `powercfg /a`.
-On such machines, turning the display off pushes the PC into connected standby
-even with "never sleep" set, and the 6 AM wake task then can't run until someone
-wakes the machine. Fix: disable Modern Standby (needs an **admin** terminal, then
-a **reboot**):
-
-```bash
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /v PlatformAoAcOverride /t REG_DWORD /d 0 /f
-```
-
-After rebooting, `powercfg /a` should no longer list "Standby (S0 Low Power
-Idle)"; the machine then won't sleep and the schedule runs on time. Reverse with
-`reg delete "...\Power" /v PlatformAoAcOverride /f`.
-
-**Screens don't wake at 6 AM (stay dark until someone moves the mouse).**
-The machine locked overnight, so the wake task's injected input couldn't reach
-the secure lock-screen desktop. Fix: keep the session from locking — disable the
-screensaver and set the inactivity auto-lock to "never" (see the two `reg`
-commands under **Display schedule** above). The wake script also nudges the
-display via a power request and a mouse jiggle, but an unlocked session is what
-guarantees it. To test a wake right now: `schtasks /Run /TN "ALARA Screens On"`.
 
 **Weather says "unavailable".**
 Weather is a live browser call to Open-Meteo; it needs internet. It retries
@@ -257,8 +170,6 @@ Board state (streak, record, custom lines) lives in the browser's
 schtasks /Delete /TN "ALARA Kiosk Server"  /F
 schtasks /Delete /TN "ALARA Daily Pull"    /F
 schtasks /Delete /TN "ALARA Kiosk Browser" /F
-schtasks /Delete /TN "ALARA Screens Off"   /F
-schtasks /Delete /TN "ALARA Screens On"    /F
 ```
 Power settings can be reverted in **Settings → System → Power** (or by choosing
 a different power plan).
